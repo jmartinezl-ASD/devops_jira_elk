@@ -3,3 +3,6 @@
 
 - pipeline.id: jurados
   path.config: "/usr/share/logstash/pipeline/juradosdep.conf"
+
+- pipeline.id: personas
+  path.config: "/usr/share/logstash/pipeline/lab_personas.conf"
