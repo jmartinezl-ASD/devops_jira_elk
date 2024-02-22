@@ -17,8 +17,8 @@ FROM
     inner join e11 as e on MV.id_mv = e.id_mv
 where
 (
-        Registro > :sql_last_value
-        and Registro < NOW()
-    )
+    Registro > :sql_last_value
+    and Registro < NOW()
+)
 ORDER BY
     Registro

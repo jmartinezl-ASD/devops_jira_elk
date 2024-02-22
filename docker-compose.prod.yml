@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-   log01:
+  log01:
     environment:
       - TZ=America/Bogota
       - "ELASTIC_PASSWORD=${ELASTIC_PASSWORD}"
