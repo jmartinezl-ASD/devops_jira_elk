@@ -1,0 +1,15 @@
+{
+    "composePath":"composes",
+    "Environments":[
+        {
+            "name": "Producción",
+            "deployServerCompose": {
+                "host": "10.0.4.30",
+                "credential": "SERVER_ELK_DEVOPS",
+                "sshPort": 51004,
+                "composePathRemote": "devops_jira_elk",
+                "composefiles":['docker-compose.yml','docker-compose.prod.yml']
+            }
+        }
+    ]
+}

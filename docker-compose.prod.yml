@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+   log01:
+    environment:
+      - TZ=America/Bogota
+      - "ELASTIC_PASSWORD=${ELASTIC_PASSWORD}"
+      - "JIRA_USER=${JIRA_USER}"
+      - "JIRA_TOKEN=${JIRA_TOKEN}"
+      - "ES_JAVA_OPTS=-Xmx2g -Xms2g"
+      - "DB_HOST=${DB_HOST}"
+      - "DB_USER=${DB_USER}"
+      - "DB_PASSWORD=${DB_PASSWORD}"
+      - "DB_PORT=${DB_PORT}"
+      - "DB_NAME_1=${DB_NAME_1}"
+      - "DB_NAME_2=${DB_NAME_2}"
+      - "DB_NAME_3=${DB_NAME_3}"
+      - "GITHUB_WEBHOOK_TOKEN=${GITHUB_WEBHOOK_TOKEN}"

@@ -1,0 +1,88 @@
+version: '3.7'
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    environment:
+      - node.name=es01
+      - cluster.name=asd-es-cluster
+      - network.host=0.0.0.0
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true      
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=true
+      - xpack.security.transport.ssl.enabled=true
+      - TZ=America/Bogota
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - bioesdata01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - elk
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+  kib01:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://es01:9200
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - SERVERNAME=localhost
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - TZ=America/Bogota
+    depends_on: ['es01']
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    networks:
+      - elk
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+  log01:
+    mem_limit: 500M
+    mem_reservation: 100M
+    cpus: 0.5
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TZ=America/Bogota
+    env_file:
+      - .env
+    volumes:
+      - biolodata01:/usr/share/logstash/data
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/diccionario:/usr/share/logstash/diccionario
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+    networks:
+      - elk
+    ports:
+      - 5001:5001
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+volumes:
+  bioesdata01:
+  biolodata01:
+networks:
+  elk:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/24
